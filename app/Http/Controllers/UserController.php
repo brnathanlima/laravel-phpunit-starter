@@ -8,25 +8,25 @@ use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 
-class UserController extends Controller {
-
-    public function index() {
-
+class UserController extends Controller
+{
+    public function index()
+    {
         return $this->successResponse(
             UserResource::collection(User::all())
         );
-
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required'
+        ]);
 
-        $user = User::create(
-            [
-                'first_name' => $request->input('first_name'),
-                'last_name'  => $request->input('last_name'),
-                'email'      => $request->input('email')
-            ]
-        );
+        $user = User::create($validatedData);
+        
         Wallet::create(
             [
                 'balance' => 0,
@@ -40,16 +40,15 @@ class UserController extends Controller {
         );
     }
 
-    public function show(User $user) {
-
+    public function show(User $user)
+    {
         return $this->successResponse(
             new UserResource($user)
         );
-
     }
 
-    public function update(Request $request, User $user) {
-
+    public function update(Request $request, User $user)
+    {
         $user->update(
             $request->only(
                 [
@@ -65,8 +64,8 @@ class UserController extends Controller {
         );
     }
 
-    public function investments(User $user) {
-
+    public function investments(User $user)
+    {
         $userInvestments = $user->investments;
 
         return $this->successResponse(
@@ -74,8 +73,8 @@ class UserController extends Controller {
         );
     }
 
-    public function destroy(User $user) {
-
+    public function destroy(User $user)
+    {
         $user->delete();
 
         return $this->deleteResponse();
