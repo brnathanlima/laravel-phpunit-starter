@@ -29,7 +29,7 @@ class UserController extends Controller {
         );
         Wallet::create(
             [
-                'balance' => 100,
+                'balance' => 0,
                 'user_id' => $user->id
             ]
         );
